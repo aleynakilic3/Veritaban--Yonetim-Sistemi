@@ -1,0 +1,127 @@
+-- Create tables and relationships based on the provided entity-relationship model
+
+-- Table: Urun
+CREATE TABLE IF NOT EXISTS Urun (
+    urun_id SERIAL PRIMARY KEY,
+    urun_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: Siparis
+CREATE TABLE IF NOT EXISTS Siparis (
+    siparis_id SERIAL PRIMARY KEY,
+    musteri_id INT NOT NULL,
+    fatura_id INT NOT NULL,
+    FOREIGN KEY (musteri_id) REFERENCES Musteri(musteri_id),
+    FOREIGN KEY (fatura_id) REFERENCES Fatura(fatura_id)
+);
+
+-- Table: Musteri
+CREATE TABLE IF NOT EXISTS Musteri (
+    musteri_id SERIAL PRIMARY KEY,
+    musteri_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: Fatura
+CREATE TABLE IF NOT EXISTS Fatura (
+    fatura_id SERIAL PRIMARY KEY,
+    fatura_tarihi DATE NOT NULL
+);
+
+-- Table: Tedarikci
+CREATE TABLE IF NOT EXISTS Tedarikci (
+    tedarikci_id SERIAL PRIMARY KEY,
+    tedarikci_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: SiparisUrun (junction table for Siparis and Urun)
+CREATE TABLE IF NOT EXISTS SiparisUrun (
+    siparis_id INT NOT NULL,
+    urun_id INT NOT NULL,
+    PRIMARY KEY (siparis_id, urun_id),
+    FOREIGN KEY (siparis_id) REFERENCES Siparis(siparis_id),
+    FOREIGN KEY (urun_id) REFERENCES Urun(urun_id)
+);
+
+-- Table: Hizmet
+CREATE TABLE IF NOT EXISTS Hizmet (
+    hizmet_id SERIAL PRIMARY KEY,
+    hizmet_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: Randevu
+CREATE TABLE IF NOT EXISTS Randevu (
+    randevu_id SERIAL PRIMARY KEY,
+    musteri_id INT NOT NULL,
+    FOREIGN KEY (musteri_id) REFERENCES Musteri(musteri_id)
+);
+
+-- Table: RandevuHizmet (junction table for Randevu and Hizmet)
+CREATE TABLE IF NOT EXISTS RandevuHizmet (
+    randevu_id INT NOT NULL,
+    hizmet_id INT NOT NULL,
+    PRIMARY KEY (randevu_id, hizmet_id),
+    FOREIGN KEY (randevu_id) REFERENCES Randevu(randevu_id),
+    FOREIGN KEY (hizmet_id) REFERENCES Hizmet(hizmet_id)
+);
+
+-- Table: Kaynak
+CREATE TABLE IF NOT EXISTS Kaynak (
+    kaynak_id SERIAL PRIMARY KEY,
+    kaynak_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: RandevuKaynak (junction table for Randevu and Kaynak)
+CREATE TABLE IF NOT EXISTS RandevuKaynak (
+    randevu_id INT NOT NULL,
+    kaynak_id INT NOT NULL,
+    PRIMARY KEY (randevu_id, kaynak_id),
+    FOREIGN KEY (randevu_id) REFERENCES Randevu(randevu_id),
+    FOREIGN KEY (kaynak_id) REFERENCES Kaynak(kaynak_id)
+);
+
+-- Table: Sube
+CREATE TABLE IF NOT EXISTS Sube (
+    sube_id SERIAL PRIMARY KEY,
+    sube_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: Calisan
+CREATE TABLE IF NOT EXISTS Calisan (
+    calisan_id SERIAL PRIMARY KEY,
+    calisan_adi VARCHAR(255) NOT NULL,
+    sube_id INT NOT NULL,
+    FOREIGN KEY (sube_id) REFERENCES Sube(sube_id)
+);
+
+-- Table: Kuafor
+CREATE TABLE IF NOT EXISTS Kuafor (
+    kuafor_id SERIAL PRIMARY KEY,
+    kuafor_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: SacKesimi
+CREATE TABLE IF NOT EXISTS SacKesimi (
+    sackesimi_id SERIAL PRIMARY KEY,
+    hizmet_id INT NOT NULL,
+    FOREIGN KEY (hizmet_id) REFERENCES Hizmet(hizmet_id)
+);
+
+-- Table: BakimHizmeti
+CREATE TABLE IF NOT EXISTS BakimHizmeti (
+    bakimhizmeti_id SERIAL PRIMARY KEY,
+    hizmet_id INT NOT NULL,
+    FOREIGN KEY (hizmet_id) REFERENCES Hizmet(hizmet_id)
+);
+
+-- Table: Resepsiyonist
+CREATE TABLE IF NOT EXISTS Resepsiyonist (
+    resepsiyonist_id SERIAL PRIMARY KEY,
+    resepsiyonist_adi VARCHAR(255) NOT NULL
+);
+
+-- Table: GeriBildirim
+CREATE TABLE IF NOT EXISTS GeriBildirim (
+    geribildirim_id SERIAL PRIMARY KEY,
+    randevu_id INT NOT NULL,
+    FOREIGN KEY (randevu_id) REFERENCES Randevu(randevu_id)
+);
